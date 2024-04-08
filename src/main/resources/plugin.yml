@@ -1,0 +1,12 @@
+name: SkeletonScience
+version: 1.0
+main: net.knoddy.skeletonscience.SkeletonScience
+author: Knoddy
+api-version: 1.20
+commands:
+  beginsimulation:
+    description: Begins the simulation
+    usage: /beginsimulation <iterations>
+  stopsimulation:
+    description: Force stops the simulation
+    usage: /stopsimulation
