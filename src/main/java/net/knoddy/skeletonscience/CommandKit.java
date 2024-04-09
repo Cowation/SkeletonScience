@@ -36,7 +36,7 @@ public class CommandKit implements CommandExecutor {
 
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
         if (experimental) {
-            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 7);
+            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, StatisticsHandler.kb_level);
         }
         zombie.getEquipment().setItemInMainHand(sword);
         zombie.getEquipment().setHelmet(new ItemStack(Material.DIAMOND_HELMET));
@@ -125,9 +125,17 @@ public class CommandKit implements CommandExecutor {
                     }
                 }
 
+                if (args.length > 1) {
+                    try {
+                        StatisticsHandler.kb_level = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage("Please enter a valid number.");
+                    }
+                }
+
                 StatisticsHandler.csvWriter = new CsvWriter(FileNameGenerator.generateTimestampedFileName("data", "csv"), new String[] {"Experimental", "Time Survived"});
 
-                Bukkit.broadcastMessage("Beginning simulation with " + StatisticsHandler.n_trials + " trials...");
+                Bukkit.broadcastMessage("Beginning simulation with Knockback level " + StatisticsHandler.kb_level + " and " + StatisticsHandler.n_trials + " trials...");
                 StatisticsHandler.killswitch = false;
                 StatisticsHandler.trials = 0;
                 execute_trial(false);

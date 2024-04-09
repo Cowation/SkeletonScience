@@ -6,7 +6,7 @@ api-version: 1.20
 commands:
   beginsimulation:
     description: Begins the simulation
-    usage: /beginsimulation <iterations>
+    usage: /beginsimulation <iterations> <kb_level>
   stopsimulation:
     description: Force stops the simulation
     usage: /stopsimulation
