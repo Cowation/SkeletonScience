@@ -145,6 +145,7 @@ public class CommandKit implements CommandExecutor {
 
                 Bukkit.broadcastMessage("Beginning simulation with Knockback level " + StatisticsHandler.kb_level + ", " + StatisticsHandler.zombies_per_sim + " zombies and " + StatisticsHandler.n_trials + " trials...");
                 StatisticsHandler.killswitch = false;
+                StatisticsHandler.experimental = false;
                 StatisticsHandler.trials = 0;
                 execute_trial(false);
 
