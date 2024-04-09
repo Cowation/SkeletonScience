@@ -133,9 +133,17 @@ public class CommandKit implements CommandExecutor {
                     }
                 }
 
+                if (args.length > 2) {
+                    try {
+                        StatisticsHandler.zombies_per_sim = Integer.parseInt(args[2]);
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage("Please enter a valid number.");
+                    }
+                }
+
                 StatisticsHandler.csvWriter = new CsvWriter(FileNameGenerator.generateTimestampedFileName("data", "csv"), new String[] {"Experimental", "Time Survived"});
 
-                Bukkit.broadcastMessage("Beginning simulation with Knockback level " + StatisticsHandler.kb_level + " and " + StatisticsHandler.n_trials + " trials...");
+                Bukkit.broadcastMessage("Beginning simulation with Knockback level " + StatisticsHandler.kb_level + ", " + StatisticsHandler.zombies_per_sim + " zombies and " + StatisticsHandler.n_trials + " trials...");
                 StatisticsHandler.killswitch = false;
                 StatisticsHandler.trials = 0;
                 execute_trial(false);
