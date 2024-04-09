@@ -141,7 +141,7 @@ public class CommandKit implements CommandExecutor {
                     }
                 }
 
-                StatisticsHandler.csvWriter = new CsvWriter(FileNameGenerator.generateTimestampedFileName("data", "csv"), new String[] {"Experimental", "Time Survived"});
+                StatisticsHandler.csvWriter = new CsvWriter(FileNameGenerator.generateTimestampedFileName("data", "csv"), new String[] {"Experimental", "Time Survived", "Subject Died"});
 
                 Bukkit.broadcastMessage("Beginning simulation with Knockback level " + StatisticsHandler.kb_level + ", " + StatisticsHandler.zombies_per_sim + " zombies and " + StatisticsHandler.n_trials + " trials...");
                 StatisticsHandler.killswitch = false;

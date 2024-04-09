@@ -42,7 +42,8 @@ public class DeathListener implements Listener {
             BigDecimal seconds_adjusted = microseconds.multiply(tickRate).divide(BigDecimal.valueOf(20 * 1000000), 6, RoundingMode.HALF_UP);
 
             Bukkit.broadcastMessage("TRIAL ENDED: " + stop_reason + " (real " + seconds + "s, adjusted " + seconds_adjusted + "s)");
-            StatisticsHandler.csvWriter.appendLine(new String[] {String.valueOf(StatisticsHandler.experimental), String.valueOf(seconds_adjusted)});
+            boolean subjectDied = stop_reason.equals("Subject died");
+            StatisticsHandler.csvWriter.appendLine(new String[] {String.valueOf(StatisticsHandler.experimental), String.valueOf(seconds_adjusted), String.valueOf(subjectDied)});
 
             if (StatisticsHandler.trials < StatisticsHandler.n_trials) {
                 if (StatisticsHandler.trials >= StatisticsHandler.n_trials / 2) {
