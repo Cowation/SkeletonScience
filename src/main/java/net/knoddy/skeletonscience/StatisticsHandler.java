@@ -17,7 +17,7 @@ public class StatisticsHandler {
     public static int zombies_per_sim = 8;
     public static int trials = 0;
     public static final double plane_y = -60;
-    public static boolean experimental = false;
+    public static int current_kb_level = 0;
     public static boolean killswitch = false;
 
     // Trial-time variables

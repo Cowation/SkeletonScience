@@ -21,7 +21,7 @@ public class CommandKit implements CommandExecutor {
     private static final Random random = new Random();
     public static World world = Bukkit.getWorld("world");
 
-    private static Zombie summonSubject(boolean experimental) {
+    private static Zombie summonSubject(int kb_level) {
         Location loc = new Location(world, 0, StatisticsHandler.plane_y, 0);
         Zombie zombie = (Zombie) world.spawnEntity(loc, EntityType.ZOMBIE);
 
@@ -29,14 +29,15 @@ public class CommandKit implements CommandExecutor {
         zombie.setCustomName("Subject");
         zombie.setRemoveWhenFarAway(false);
         zombie.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, PotionEffect.INFINITE_DURATION, 0, false, false, false));
+        zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0, false, false, false));
 
         if (!zombie.isAdult()) {
             zombie.setAdult();
         }
 
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
-        if (experimental) {
-            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, StatisticsHandler.kb_level);
+        if (kb_level > 0) {
+            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, kb_level);
         }
         zombie.getEquipment().setItemInMainHand(sword);
         zombie.getEquipment().setHelmet(new ItemStack(Material.DIAMOND_HELMET));
@@ -64,6 +65,7 @@ public class CommandKit implements CommandExecutor {
         zombie.setPersistent(true);
         zombie.setCustomName("Attacker");
         zombie.setRemoveWhenFarAway(false);
+        zombie.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, PotionEffect.INFINITE_DURATION, 0, false, false, false));
 
         if (!zombie.isAdult()) {
             zombie.setAdult();
@@ -90,15 +92,11 @@ public class CommandKit implements CommandExecutor {
         }
     }
 
-    public static void execute_trial(boolean experimental) {
-        if (experimental) {
-            Bukkit.broadcastMessage("TRIAL STARTING: Running trial " + (StatisticsHandler.trials + 1) + " with experimental settings");
-        } else {
-            Bukkit.broadcastMessage("TRIAL STARTING: Running trial " + (StatisticsHandler.trials + 1) + " with control settings");
-        }
+    public static void execute_trial(int kb_level) {
+        Bukkit.broadcastMessage("TRIAL STARTING: Running trial " + (StatisticsHandler.trials + 1) + " with Knockback " + StatisticsHandler.current_kb_level);
 
         clear_zombies();
-        Zombie subject = summonSubject(experimental);
+        Zombie subject = summonSubject(kb_level);
 
         // Assign subject ID and zombie ID for this experiment
         StatisticsHandler.subject_id = subject.getUniqueId();
@@ -141,13 +139,13 @@ public class CommandKit implements CommandExecutor {
                     }
                 }
 
-                StatisticsHandler.csvWriter = new CsvWriter(FileNameGenerator.generateTimestampedFileName("data", "csv"), new String[] {"Experimental", "Time Survived", "Subject Died"});
+                StatisticsHandler.csvWriter = new CsvWriter(FileNameGenerator.generateTimestampedFileName("data", "csv"), new String[] {"Knockback Level", "Time Survived", "Subject Died"});
 
                 Bukkit.broadcastMessage("Beginning simulation with Knockback level " + StatisticsHandler.kb_level + ", " + StatisticsHandler.zombies_per_sim + " zombies and " + StatisticsHandler.n_trials + " trials...");
                 StatisticsHandler.killswitch = false;
-                StatisticsHandler.experimental = false;
+                StatisticsHandler.current_kb_level = 0;
                 StatisticsHandler.trials = 0;
-                execute_trial(false);
+                execute_trial(0);
 
                 return true;
             } else if (command.getName().equalsIgnoreCase("stopsimulation")) {
