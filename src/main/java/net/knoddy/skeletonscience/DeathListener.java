@@ -43,16 +43,19 @@ public class DeathListener implements Listener {
 
             Bukkit.broadcastMessage("TRIAL ENDED: " + stop_reason + " (real " + seconds + "s, adjusted " + seconds_adjusted + "s)");
             boolean subjectDied = stop_reason.equals("Subject died");
-            StatisticsHandler.csvWriter.appendLine(new String[] {String.valueOf(StatisticsHandler.current_kb_level), String.valueOf(seconds_adjusted), String.valueOf(subjectDied)});
+            StatisticsHandler.csvWriter.appendLine(new String[] {String.valueOf(StatisticsHandler.current_kb_level), String.valueOf(seconds_adjusted)});
 
             if (StatisticsHandler.trials < StatisticsHandler.n_trials) {
 //                if (StatisticsHandler.trials >= StatisticsHandler.n_trials / 2) {
 //                    StatisticsHandler.experimental = true;
 //                }
 
-                StatisticsHandler.current_kb_level = StatisticsHandler.trials / ((StatisticsHandler.n_trials + StatisticsHandler.kb_level) / (StatisticsHandler.kb_level + 1));
-
-                CommandKit.execute_trial(StatisticsHandler.current_kb_level);
+                if (StatisticsHandler.incremental) {
+                    StatisticsHandler.current_kb_level = StatisticsHandler.trials / ((StatisticsHandler.n_trials + StatisticsHandler.kb_level) / (StatisticsHandler.kb_level + 1));
+                    CommandKit.execute_trial(StatisticsHandler.current_kb_level);
+                } else {
+                    CommandKit.execute_trial(StatisticsHandler.kb_level);
+                }
             }
         }
     }

@@ -14,6 +14,7 @@ public class StatisticsHandler {
     // Trial-independent variables
     public static int n_trials = 20;
     public static int kb_level = 7;
+    public static boolean incremental = true;
     public static int zombies_per_sim = 8;
     public static int trials = 0;
     public static final double plane_y = -60;

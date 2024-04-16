@@ -29,13 +29,13 @@ public class CommandKit implements CommandExecutor {
         zombie.setCustomName("Subject");
         zombie.setRemoveWhenFarAway(false);
         zombie.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, PotionEffect.INFINITE_DURATION, 0, false, false, false));
-        zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0, false, false, false));
+//        zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0, false, false, false));
 
         if (!zombie.isAdult()) {
             zombie.setAdult();
         }
 
-        ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
+        ItemStack sword = new ItemStack(Material.SLIME_BALL);
         if (kb_level > 0) {
             sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, kb_level);
         }
@@ -65,7 +65,8 @@ public class CommandKit implements CommandExecutor {
         zombie.setPersistent(true);
         zombie.setCustomName("Attacker");
         zombie.setRemoveWhenFarAway(false);
-        zombie.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, PotionEffect.INFINITE_DURATION, 0, false, false, false));
+        zombie.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, PotionEffect.INFINITE_DURATION, 255, false, false, false));
+//        zombie.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, PotionEffect.INFINITE_DURATION, 0, false, false, false));
 
         if (!zombie.isAdult()) {
             zombie.setAdult();
@@ -93,7 +94,7 @@ public class CommandKit implements CommandExecutor {
     }
 
     public static void execute_trial(int kb_level) {
-        Bukkit.broadcastMessage("TRIAL STARTING: Running trial " + (StatisticsHandler.trials + 1) + " with Knockback " + StatisticsHandler.current_kb_level);
+        Bukkit.broadcastMessage("TRIAL STARTING: Running trial " + (StatisticsHandler.trials + 1) + " with Knockback " + kb_level);
 
         clear_zombies();
         Zombie subject = summonSubject(kb_level);
@@ -139,13 +140,22 @@ public class CommandKit implements CommandExecutor {
                     }
                 }
 
-                StatisticsHandler.csvWriter = new CsvWriter(FileNameGenerator.generateTimestampedFileName("data", "csv"), new String[] {"Knockback Level", "Time Survived", "Subject Died"});
+                if (args.length > 3) {
+                    StatisticsHandler.incremental = Boolean.parseBoolean(args[3]);
+                }
+
+                StatisticsHandler.csvWriter = new CsvWriter(FileNameGenerator.generateTimestampedFileName("data", "csv"), new String[] {"Knockback Level", "Time Survived"});
 
                 Bukkit.broadcastMessage("Beginning simulation with Knockback level " + StatisticsHandler.kb_level + ", " + StatisticsHandler.zombies_per_sim + " zombies and " + StatisticsHandler.n_trials + " trials...");
                 StatisticsHandler.killswitch = false;
                 StatisticsHandler.current_kb_level = 0;
                 StatisticsHandler.trials = 0;
-                execute_trial(0);
+
+                if (StatisticsHandler.incremental) {
+                    execute_trial(0);
+                } else {
+                    execute_trial(StatisticsHandler.kb_level);
+                }
 
                 return true;
             } else if (command.getName().equalsIgnoreCase("stopsimulation")) {
